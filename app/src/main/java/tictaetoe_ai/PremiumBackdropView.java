@@ -11,7 +11,6 @@ import android.graphics.Path;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -23,12 +22,13 @@ public class PremiumBackdropView extends View {
     private ValueAnimator animator;
     private float motion;
 
-    private static final int BURNT_ORANGE = Color.rgb(178, 82, 46);
-    private static final int ROAST = Color.rgb(106, 44, 27);
-    private static final int ESPRESSO = Color.rgb(45, 24, 17);
-    private static final int CREAM = Color.rgb(248, 237, 216);
-    private static final int BUTTER = Color.rgb(255, 220, 143);
-    private static final int FOREST = Color.rgb(13, 107, 79);
+    private static final int MIDNIGHT = Color.rgb(3, 7, 18);
+    private static final int DEEP_SEA = Color.rgb(4, 30, 48);
+    private static final int INK_PURPLE = Color.rgb(23, 11, 45);
+    private static final int CYAN = Color.rgb(60, 230, 255);
+    private static final int VIOLET = Color.rgb(188, 112, 255);
+    private static final int MINT = Color.rgb(90, 255, 205);
+    private static final int ROSE = Color.rgb(255, 95, 157);
 
     public PremiumBackdropView(Context context) {
         super(context);
@@ -42,14 +42,14 @@ public class PremiumBackdropView extends View {
 
     private void init() {
         setLayerType(LAYER_TYPE_SOFTWARE, null);
-        glowPaint.setMaskFilter(new BlurMaskFilter(42f, BlurMaskFilter.Blur.NORMAL));
+        glowPaint.setMaskFilter(new BlurMaskFilter(54f, BlurMaskFilter.Blur.NORMAL));
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         animator = ValueAnimator.ofFloat(0f, 1f);
-        animator.setDuration(11000L);
+        animator.setDuration(9000L);
         animator.setInterpolator(new LinearInterpolator());
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.addUpdateListener(animation -> {
@@ -75,170 +75,145 @@ public class PremiumBackdropView extends View {
         int height = getHeight();
         if (width <= 0 || height <= 0) return;
 
-        drawGradientBase(canvas, width, height);
-        drawTexture(canvas, width, height);
-        drawGiantType(canvas, width, height);
-        drawSteam(canvas, width, height);
-        drawFloatingPieces(canvas, width, height);
-        drawBottomCreamBand(canvas, width, height);
+        drawBase(canvas, width, height);
+        drawLiquidLight(canvas, width, height);
+        drawAuroraCurtains(canvas, width, height);
+        drawCausticNet(canvas, width, height);
+        drawParticles(canvas, width, height);
+        drawReadableStage(canvas, width, height);
         drawVignette(canvas, width, height);
     }
 
-    private void drawGradientBase(Canvas canvas, int width, int height) {
+    private void drawBase(Canvas canvas, int width, int height) {
         paint.setShader(new LinearGradient(
                 0, 0, width, height,
-                new int[]{Color.rgb(196, 93, 50), BURNT_ORANGE, ROAST, ESPRESSO},
-                new float[]{0f, 0.38f, 0.76f, 1f},
+                new int[]{MIDNIGHT, DEEP_SEA, INK_PURPLE, MIDNIGHT},
+                new float[]{0f, 0.34f, 0.72f, 1f},
                 Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, width, height, paint);
         paint.setShader(null);
 
-        glowPaint.setColor(Color.argb(122, 255, 205, 116));
-        canvas.drawCircle(width * 0.22f, height * 0.18f, width * 0.42f, glowPaint);
-        glowPaint.setColor(Color.argb(92, 10, 90, 68));
-        canvas.drawCircle(width * 0.82f, height * 0.58f, width * 0.38f, glowPaint);
+        float pulse = 0.5f + 0.5f * wave(0f);
+        glowPaint.setColor(Color.argb((int) (82 + pulse * 34), 60, 230, 255));
+        canvas.drawCircle(width * (0.22f + 0.03f * wave(0.2f)), height * 0.22f,
+                width * 0.42f, glowPaint);
+        glowPaint.setColor(Color.argb((int) (72 + pulse * 28), 188, 112, 255));
+        canvas.drawCircle(width * (0.86f + 0.02f * wave(0.55f)), height * 0.66f,
+                width * 0.46f, glowPaint);
+        glowPaint.setColor(Color.argb(58, 90, 255, 205));
+        canvas.drawCircle(width * 0.58f, height * 0.92f, width * 0.34f, glowPaint);
     }
 
-    private void drawTexture(Canvas canvas, int width, int height) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(1.2f);
-        paint.setColor(Color.argb(36, 255, 238, 205));
-
-        float drift = motion * 48f;
-        for (int i = -height; i < width; i += 42) {
-            canvas.drawLine(i + drift, 0, i + height + drift, height, paint);
-        }
-
-        paint.setStrokeWidth(1f);
-        paint.setColor(Color.argb(25, 80, 28, 16));
-        for (int i = -width; i < width * 2; i += 58) {
-            canvas.drawLine(i - drift, height, i + height - drift, 0, paint);
-        }
+    private void drawLiquidLight(Canvas canvas, int width, int height) {
         paint.setStyle(Paint.Style.FILL);
-    }
-
-    private void drawGiantType(Canvas canvas, int width, int height) {
-        paint.setShader(null);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setColor(Color.argb(188, 248, 237, 216));
-
-        float titleSize = Math.max(82f, width * 0.28f);
-        paint.setTextSize(titleSize);
-        canvas.drawText("TIC", width * 0.5f, height * 0.17f, paint);
-        canvas.drawText("TAC", width * 0.5f, height * 0.29f, paint);
-
-        paint.setColor(Color.argb(92, 248, 237, 216));
-        paint.setTextSize(Math.max(130f, width * 0.52f));
-        canvas.drawText("XO", width * 0.5f, height * 0.66f, paint);
-    }
-
-    private void drawSteam(Canvas canvas, int width, int height) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeCap(Paint.Cap.ROUND);
-        paint.setStrokeWidth(4f);
-        paint.setColor(Color.argb(72, 255, 244, 221));
-
-        float phase = (float) Math.sin(motion * Math.PI * 2f) * 18f;
         for (int i = 0; i < 4; i++) {
-            float startX = width * (0.24f + i * 0.16f);
-            float startY = height * 0.47f + i * 12f;
+            float phase = motion + i * 0.19f;
+            int color = i % 2 == 0 ? CYAN : VIOLET;
+            paint.setColor(Color.argb(22 + i * 8, Color.red(color), Color.green(color), Color.blue(color)));
+
             Path path = new Path();
-            path.moveTo(startX, startY);
-            path.cubicTo(startX - 30f + phase, startY - 42f,
-                    startX + 36f - phase, startY - 86f,
-                    startX + 8f, startY - 128f);
+            float yBase = height * (0.18f + i * 0.18f);
+            path.moveTo(-width * 0.2f, yBase);
+            for (int x = -40; x <= width + 80; x += 48) {
+                float y = yBase
+                        + wave(phase + x * 0.0019f) * 42f
+                        + (float) Math.sin((x * 0.021f) + phase * Math.PI * 2f) * 18f;
+                path.lineTo(x, y);
+            }
+            path.lineTo(width * 1.2f, yBase + height * 0.16f);
+            path.lineTo(-width * 0.2f, yBase + height * 0.18f);
+            path.close();
             canvas.drawPath(path, paint);
         }
+    }
+
+    private void drawAuroraCurtains(Canvas canvas, int width, int height) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+
+        for (int layer = 0; layer < 7; layer++) {
+            float x = width * (-0.18f + layer * 0.22f + 0.04f * wave(layer * 0.13f));
+            int color = layer % 3 == 0 ? CYAN : layer % 3 == 1 ? MINT : VIOLET;
+            paint.setStrokeWidth(18f + layer * 3f);
+            paint.setColor(Color.argb(34, Color.red(color), Color.green(color), Color.blue(color)));
+
+            Path ribbon = new Path();
+            ribbon.moveTo(x, -60f);
+            ribbon.cubicTo(
+                    x + width * 0.20f + wave(layer * 0.08f) * 60f, height * 0.28f,
+                    x - width * 0.18f + wave(layer * 0.16f) * 70f, height * 0.62f,
+                    x + width * 0.20f, height + 80f);
+            canvas.drawPath(ribbon, paint);
+        }
+
         paint.setStyle(Paint.Style.FILL);
     }
 
-    private void drawFloatingPieces(Canvas canvas, int width, int height) {
-        drawToken(canvas, width * 0.18f, height * 0.39f, 24f, "X", CREAM, FOREST, 0.1f);
-        drawToken(canvas, width * 0.80f, height * 0.24f, 30f, "O", ESPRESSO, BUTTER, 0.43f);
-        drawToken(canvas, width * 0.72f, height * 0.50f, 22f, "X", CREAM, ROAST, 0.72f);
-        drawToken(canvas, width * 0.30f, height * 0.78f, 28f, "O", ESPRESSO, CREAM, 0.88f);
+    private void drawCausticNet(Canvas canvas, int width, int height) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeCap(Paint.Cap.ROUND);
 
-        drawBean(canvas, width * 0.67f, height * 0.35f, 34f, 0.21f);
-        drawBean(canvas, width * 0.32f, height * 0.22f, 39f, 0.56f);
-        drawBean(canvas, width * 0.86f, height * 0.72f, 31f, 0.78f);
-        drawBean(canvas, width * 0.12f, height * 0.66f, 27f, 0.36f);
+        float drift = motion * 140f;
+        for (int i = -4; i < 18; i++) {
+            float y = height * 0.14f + i * height * 0.055f;
+            paint.setStrokeWidth(i % 3 == 0 ? 1.8f : 1.1f);
+            paint.setColor(Color.argb(i % 3 == 0 ? 74 : 42, 210, 250, 255));
+            Path path = new Path();
+            path.moveTo(-40f, y);
+            for (int x = -40; x <= width + 40; x += 36) {
+                path.lineTo(x, y + wave(0.07f * i + x * 0.002f + motion) * 16f);
+            }
+            canvas.drawPath(path, paint);
+        }
+
+        for (int i = -6; i < 12; i++) {
+            float x = i * width * 0.12f + drift % (width * 0.24f);
+            paint.setStrokeWidth(1.2f);
+            paint.setColor(Color.argb(38, 188, 112, 255));
+            canvas.drawLine(x, 0f, x + width * 0.48f, height, paint);
+        }
+        paint.setStyle(Paint.Style.FILL);
     }
 
-    private void drawToken(Canvas canvas, float x, float y, float radius, String label,
-                           int fill, int textColor, float offset) {
-        float wave = (float) Math.sin((motion + offset) * Math.PI * 2f);
-        float bob = wave * 15f;
-        float spin = (motion + offset) * 360f;
+    private void drawParticles(Canvas canvas, int width, int height) {
+        paint.setStyle(Paint.Style.FILL);
+        for (int i = 0; i < 38; i++) {
+            float seed = i * 0.137f;
+            float x = ((seed * 997f + motion * (26f + i % 5 * 9f)) % 1f) * width;
+            float y = ((seed * 571f + wave(seed) * 0.03f + motion * 0.06f) % 1f) * height;
+            float radius = 1.1f + (i % 4) * 0.55f;
+            int color = i % 3 == 0 ? CYAN : i % 3 == 1 ? MINT : ROSE;
+            paint.setColor(Color.argb(56 + (i % 5) * 18,
+                    Color.red(color), Color.green(color), Color.blue(color)));
+            canvas.drawCircle(x, y, radius, paint);
+        }
+    }
 
-        canvas.save();
-        canvas.translate(x, y + bob);
-        canvas.rotate(spin);
-
+    private void drawReadableStage(Canvas canvas, int width, int height) {
+        float cx = width * 0.5f;
+        float cy = height * 0.54f;
         paint.setShader(new RadialGradient(
-                -radius * 0.35f, -radius * 0.35f, radius * 1.6f,
-                Color.argb(255, 255, 249, 235), fill, Shader.TileMode.CLAMP));
-        canvas.drawCircle(0f, 0f, radius, paint);
+                cx, cy, width * 0.68f,
+                new int[]{Color.argb(150, 1, 5, 14), Color.argb(72, 1, 5, 14), Color.TRANSPARENT},
+                new float[]{0f, 0.58f, 1f},
+                Shader.TileMode.CLAMP));
+        canvas.drawRect(0, 0, width, height, paint);
         paint.setShader(null);
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(3f);
-        paint.setColor(Color.argb(145, 75, 34, 20));
-        canvas.drawCircle(0f, 0f, radius - 2f, paint);
-
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(textColor);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(radius * 1.05f);
-        Paint.FontMetrics metrics = paint.getFontMetrics();
-        canvas.rotate(-spin);
-        canvas.drawText(label, 0f, -(metrics.ascent + metrics.descent) / 2f, paint);
-        canvas.restore();
-    }
-
-    private void drawBean(Canvas canvas, float x, float y, float size, float offset) {
-        float wave = (float) Math.cos((motion + offset) * Math.PI * 2f);
-        canvas.save();
-        canvas.translate(x, y + wave * 18f);
-        canvas.rotate(-28f + wave * 14f);
-
-        rect.set(-size * 0.42f, -size * 0.72f, size * 0.42f, size * 0.72f);
-        paint.setShader(new LinearGradient(
-                rect.left, rect.top, rect.right, rect.bottom,
-                Color.rgb(91, 42, 24), Color.rgb(28, 15, 11), Shader.TileMode.CLAMP));
-        canvas.drawOval(rect, paint);
-        paint.setShader(null);
-
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2.4f);
-        paint.setColor(Color.argb(155, 217, 139, 85));
-        Path groove = new Path();
-        groove.moveTo(0, -size * 0.54f);
-        groove.cubicTo(-size * 0.22f, -size * 0.18f, size * 0.22f, size * 0.16f, 0, size * 0.54f);
-        canvas.drawPath(groove, paint);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.restore();
-    }
-
-    private void drawBottomCreamBand(Canvas canvas, int width, int height) {
-        float top = height * 0.86f;
-        rect.set(-20f, top, width + 20f, height + 30f);
-        paint.setColor(Color.argb(238, 247, 235, 213));
-        canvas.drawRoundRect(rect, 38f, 38f, paint);
-
-        paint.setColor(Color.argb(45, 36, 25, 18));
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        paint.setTextSize(12f);
-        canvas.drawText("TIC TAC TOE AI", width * 0.5f, top + 34f, paint);
+        rect.set(width * 0.04f, height * 0.28f, width * 0.96f, height * 0.83f);
+        paint.setColor(Color.argb(38, 248, 251, 255));
+        canvas.drawRoundRect(rect, 34f, 34f, paint);
     }
 
     private void drawVignette(Canvas canvas, int width, int height) {
         paint.setShader(new RadialGradient(
-                width * 0.5f, height * 0.42f, Math.max(width, height) * 0.78f,
-                Color.TRANSPARENT, Color.argb(118, 25, 12, 9), Shader.TileMode.CLAMP));
+                width * 0.5f, height * 0.5f, Math.max(width, height) * 0.74f,
+                Color.TRANSPARENT, Color.argb(168, 0, 0, 0), Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, width, height, paint);
         paint.setShader(null);
+    }
+
+    private float wave(float offset) {
+        return (float) Math.sin((motion + offset) * Math.PI * 2f);
     }
 }

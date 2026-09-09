@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.tictactoe.PremiumBackdropView
+        android:id="@+id/premiumBackdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/gameSurface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp">
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:text="Your move"
+            android:textColor="#F8FBFF"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/boardPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:padding="10dp">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:rowCount="3"
+                android:useDefaultMargins="false">
+
+                <Button
+                    android:id="@+id/btn0"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Top left cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn1"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Top center cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn2"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Top right cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn3"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Middle left cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn4"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Center cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn5"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Middle right cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn6"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Bottom left cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn7"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Bottom center cell"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/btn8"
+                    android:layout_width="0dp"
+                    android:layout_height="105dp"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:contentDescription="Bottom right cell"
+                    android:text="" />
+            </GridLayout>
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>
